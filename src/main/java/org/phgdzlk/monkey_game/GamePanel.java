@@ -1,30 +1,39 @@
 package org.phgdzlk.monkey_game;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
-
-    enum Direction {
-        UP, RIGHT, DOWN, LEFT
-    }
-
+    Thread gameThread;
+    KeyHandler keyH = new KeyHandler();
+    MouseHandler mouseH = new MouseHandler();
     public static final int screenWidth = 1200;
     public static final int screenHeight = 600;
     public static final int FPS = 60;
-    KeyHandler keyH = new KeyHandler();
-    Thread gameThread;
+    public static final int handWidth = 36;
+    public static final int handHeight = 30;
+    public static final int headSize = 60;
+    public static int gameSpeed = 5;
+    Monke monke = new Monke();
+    BufferedImage openHand;
+    BufferedImage closedHand;
+    BufferedImage head;
 
-    public static int x = 100;
-    public static int y = 100;
-    public static int speed = 5;
-
-    public GamePanel() {
+    public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(Color.BLACK);
+        this.setBackground(new Color(0x00cccc));
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
+        this.addMouseListener(mouseH);
+        this.addMouseMotionListener(mouseH);
         this.setFocusable(true);
+
+        openHand = ImageIO.read(getClass().getClassLoader().getResource("images/open_hand.png"));
+        closedHand = ImageIO.read(getClass().getClassLoader().getResource("images/closed_hand.png"));
+        head = ImageIO.read(getClass().getClassLoader().getResource("images/head.png"));
     }
 
     public void startGameThread() {
@@ -53,29 +62,41 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if (keyH.upPressed && canMove(Direction.UP)) y -= speed;
-        if (keyH.rightPressed && canMove(Direction.RIGHT)) x += speed;
-        if (keyH.downPressed && canMove(Direction.DOWN)) y += speed;
-        if (keyH.leftPressed && canMove(Direction.LEFT)) x -= speed;
-    }
-
-    private boolean canMove(Direction d) {
-        boolean yesItCan = false;
-        switch (d) {
-            case UP -> yesItCan = y - speed > 10;
-            case RIGHT -> yesItCan = x + speed < screenWidth - 60;
-            case DOWN -> yesItCan = y + speed < screenHeight - 60;
-            case LEFT -> yesItCan = x - speed > 10;
+        for (Hand hand : monke.hands) {
+            if (hand.isClenched) {
+                hand.x -= gameSpeed;
+            } else {
+                hand.x = mouseH.mouseX;
+                hand.y = mouseH.mouseY;
+            }
         }
-        return yesItCan;
+        if (mouseH.isClicked) {
+            monke.hands[0].isClenched = !monke.hands[0].isClenched;
+            monke.hands[1].isClenched = !monke.hands[1].isClenched;
+            mouseH.isClicked = false;
+        }
+        monke.checkDeath();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.WHITE);
-        g2.fillRect(x, y, 50, 50);
+
+        paintMonke(g);
 
         g2.dispose();
+        g.dispose();
+    }
+
+    public void paintMonke(Graphics g) {
+        BufferedImage img;
+        // right hand
+        img = monke.hands[0].isClenched ? closedHand : openHand;
+        g.drawImage(img, monke.hands[0].x, monke.hands[0].y, null);
+        // left hand
+        img = monke.hands[1].isClenched ? closedHand : openHand;
+        g.drawImage(img, monke.hands[1].x, monke.hands[1].y, null);
+        // body
+        g.drawImage(head, monke.getBodyX(), monke.getBodyY(), null);
     }
 }

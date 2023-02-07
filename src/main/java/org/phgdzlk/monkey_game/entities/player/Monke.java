@@ -8,7 +8,8 @@ import java.util.Objects;
 public class Monke {
     private int previousBodyX, previousBodyY;
     public final BufferedImage headImage;
-    public final int headImageSize = 60;
+    public static final int headSize = 60;
+    public static final int headHalfSize = headSize / 2;
     public Hand[] hands = new Hand[2];
 
     public Monke() throws IOException {
@@ -19,19 +20,19 @@ public class Monke {
     }
 
     public int getBodyX() {
-        return (hands[0].x + hands[1].x) >> 1;
+        return ((hands[0].getX() + hands[1].getX()) >> 1) - headHalfSize;
     }
 
     public int getBodyY() {
-        return (hands[0].y + hands[1].y + 100) >> 1;
+        return ((hands[0].getY() + hands[1].getY() + 100) >> 1) - headHalfSize;
     }
 
     public boolean isCrashed() {
-        if (this.getBodyX() < 2 || this.getBodyY() > 1138 || this.getBodyY() < 2 || this.getBodyY() > 538) {
+        if (this.getBodyX() < 0 || this.getBodyY() > 1200 - Hand.handSize || this.getBodyY() < 0 || this.getBodyY() > 600 - Hand.handSize) {
             return true;
         }
         for (Hand hand : hands) {
-            if (hand.x < 2 || hand.y < 2 || hand.x > 1148 || hand.y > 548) {
+            if (hand.getX() < 2 || hand.getY() < 2 || hand.getX() > 1148 || hand.getY() > 548) {
                 return true;
             }
         }

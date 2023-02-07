@@ -5,10 +5,8 @@ import org.phgdzlk.monkey_game.entities.player.Monke;
 import org.phgdzlk.monkey_game.input_handlers.KeyHandler;
 import org.phgdzlk.monkey_game.input_handlers.MouseHandler;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -18,15 +16,12 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int screenWidth = 1200;
     public static final int screenHeight = 600;
     public static final int FPS = 60;
-    public static final int handWidth = 36;
-    public static final int handHeight = 30;
-    public static final int headSize = 60;
     public static int gameSpeed = 5;
     Monke monke = new Monke();
 
     public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(new Color(0x00cccc));
+        this.setBackground(new Color(0x1BCE7E));
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.addMouseListener(mouseH);
@@ -69,8 +64,9 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         if (mouseH.isClicked) {
-            monke.hands[0].isClenched = !monke.hands[0].isClenched;
-            monke.hands[1].isClenched = !monke.hands[1].isClenched;
+            for (var hand : monke.hands) {
+                hand.switchClenchState();
+            }
             mouseH.isClicked = false;
         }
         if (monke.isCrashed()) gameThread.interrupt();
@@ -87,10 +83,10 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void drawMonke(Graphics2D g2) {
-        // right hand
-        g2.drawImage(monke.hands[0].getImage(), monke.hands[0].x, monke.hands[0].y, null);
-        // left hand
-        g2.drawImage(monke.hands[1].getImage(), monke.hands[1].x, monke.hands[1].y, null);
+        // hands
+        for (var hand : monke.hands) {
+            g2.drawImage(hand.getImage(), hand.getX(), hand.getY(), null);
+        }
         // body
         g2.drawImage(monke.headImage, monke.getBodyX(), monke.getBodyY(), null);
     }

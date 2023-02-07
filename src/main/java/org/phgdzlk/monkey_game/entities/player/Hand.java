@@ -8,7 +8,8 @@ import java.util.Objects;
 public class Hand {
     public final BufferedImage openHandImage;
     public final BufferedImage closeHandImage;
-    public final int handSize = 36;
+    public static final int handSize = 36;
+    public static final int handHalfSize = handSize / 2;
     public int x = 600;
     public int y = 300;
     public boolean isClenched = false;
@@ -24,5 +25,17 @@ public class Hand {
         } else {
             return openHandImage;
         }
+    }
+
+    public int getX() {
+        return x - handHalfSize;
+    }
+
+    public int getY() {
+        return y - handHalfSize;
+    }
+
+    public void switchClenchState() {
+        isClenched = !isClenched;
     }
 }

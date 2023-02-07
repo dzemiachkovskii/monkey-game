@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="grippy-ape" />
+        <module name="monkey_game" />
         <module name="monkey-game" />
       </profile>
     </annotationProcessing>

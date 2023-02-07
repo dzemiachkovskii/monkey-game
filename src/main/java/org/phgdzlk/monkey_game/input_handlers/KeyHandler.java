@@ -1,4 +1,4 @@
-package org.phgdzlk.monkey_game;
+package org.phgdzlk.monkey_game.input_handlers;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

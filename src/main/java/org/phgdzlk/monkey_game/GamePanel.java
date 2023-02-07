@@ -1,5 +1,10 @@
 package org.phgdzlk.monkey_game;
 
+import org.phgdzlk.monkey_game.entities.player.Hand;
+import org.phgdzlk.monkey_game.entities.player.Monke;
+import org.phgdzlk.monkey_game.input_handlers.KeyHandler;
+import org.phgdzlk.monkey_game.input_handlers.MouseHandler;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -18,9 +23,6 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int headSize = 60;
     public static int gameSpeed = 5;
     Monke monke = new Monke();
-    BufferedImage openHand;
-    BufferedImage closedHand;
-    BufferedImage head;
 
     public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -30,10 +32,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.addMouseListener(mouseH);
         this.addMouseMotionListener(mouseH);
         this.setFocusable(true);
-
-        openHand = ImageIO.read(getClass().getClassLoader().getResource("images/open_hand.png"));
-        closedHand = ImageIO.read(getClass().getClassLoader().getResource("images/closed_hand.png"));
-        head = ImageIO.read(getClass().getClassLoader().getResource("images/head.png"));
     }
 
     public void startGameThread() {
@@ -48,7 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
         long lastTime = System.nanoTime();
         long currentTime;
 
-        while (gameThread != null) {
+        while (gameThread != null && !gameThread.isInterrupted()) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
@@ -75,28 +73,25 @@ public class GamePanel extends JPanel implements Runnable {
             monke.hands[1].isClenched = !monke.hands[1].isClenched;
             mouseH.isClicked = false;
         }
-        monke.checkDeath();
+        if (monke.isCrashed()) gameThread.interrupt();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        paintMonke(g);
+        drawMonke(g2);
 
         g2.dispose();
         g.dispose();
     }
 
-    public void paintMonke(Graphics g) {
-        BufferedImage img;
+    public void drawMonke(Graphics2D g2) {
         // right hand
-        img = monke.hands[0].isClenched ? closedHand : openHand;
-        g.drawImage(img, monke.hands[0].x, monke.hands[0].y, null);
+        g2.drawImage(monke.hands[0].getImage(), monke.hands[0].x, monke.hands[0].y, null);
         // left hand
-        img = monke.hands[1].isClenched ? closedHand : openHand;
-        g.drawImage(img, monke.hands[1].x, monke.hands[1].y, null);
+        g2.drawImage(monke.hands[1].getImage(), monke.hands[1].x, monke.hands[1].y, null);
         // body
-        g.drawImage(head, monke.getBodyX(), monke.getBodyY(), null);
+        g2.drawImage(monke.headImage, monke.getBodyX(), monke.getBodyY(), null);
     }
 }

@@ -1,0 +1,28 @@
+package org.phgdzlk.monkey_game.entities.player;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Objects;
+
+public class Hand {
+    public final BufferedImage openHandImage;
+    public final BufferedImage closeHandImage;
+    public final int handSize = 36;
+    public int x = 600;
+    public int y = 300;
+    public boolean isClenched = false;
+
+    public Hand() throws IOException {
+        openHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/open_hand.png")));
+        closeHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/closed_hand.png")));
+    }
+
+    public BufferedImage getImage() {
+        if (isClenched) {
+            return closeHandImage;
+        } else {
+            return openHandImage;
+        }
+    }
+}

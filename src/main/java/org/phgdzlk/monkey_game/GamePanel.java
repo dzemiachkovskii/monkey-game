@@ -1,7 +1,7 @@
 package org.phgdzlk.monkey_game;
 
 import org.phgdzlk.monkey_game.entities.decorations.Clouds;
-import org.phgdzlk.monkey_game.entities.player.Hand;
+import org.phgdzlk.monkey_game.entities.interactive.Creepers;
 import org.phgdzlk.monkey_game.entities.player.Monke;
 import org.phgdzlk.monkey_game.input_handlers.KeyHandler;
 import org.phgdzlk.monkey_game.input_handlers.MouseHandler;
@@ -20,6 +20,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static int gameSpeed = 5;
     Monke monke = new Monke();
     Clouds clouds = new Clouds();
+    Creepers creepers = new Creepers();
 
     public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -57,57 +58,20 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        for (Hand hand : monke.hands) {
-            if (hand.isClenched) {
-                hand.coordinates.setLocation(hand.coordinates.x - gameSpeed, hand.coordinates.y);
-            } else {
-                hand.approach(mouseH.coordinates);
-            }
-        }
-        if (mouseH.isClicked) {
-            for (var hand : monke.hands) {
-                hand.switchClenchState();
-            }
-            mouseH.isClicked = false;
-        }
+        monke.update(gameSpeed, mouseH);
         clouds.update();
-        for (Point cloud : clouds.coordinates) {
-            cloud.setLocation(cloud.x - gameSpeed - 1, cloud.y);
-        }
-        if (monke.isCrashed()) gameThread.interrupt();
+        creepers.update();
+        if (monke.isAlive()) gameThread.interrupt();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        drawClouds(g2);
-        drawMonke(g2);
-        drawHerbs(g2);
+        clouds.draw(g2);
+        monke.draw(g2);
+//        creepers, obstacles, herbs;
 
         g2.dispose();
-    }
-
-    private void drawHerbs(Graphics2D g2) {
-
-    }
-
-    private void drawClouds(Graphics2D g2) {
-        for (Point cloud : clouds.coordinates) {
-            g2.drawImage(clouds.image, cloud.x, cloud.y, (Clouds.cloudWidth * 3), (Clouds.cloudHeight * 3), null);
-        }
-    }
-
-    public void drawMonke(Graphics2D g2) {
-        Point head = monke.getCoordinates();
-        // arms
-        for (var hand : monke.hands) {
-            Point handCrd = hand.getCoordinates();
-            g2.setStroke(new BasicStroke(15));
-            g2.drawLine(handCrd.x + Hand.handHalfSize, handCrd.y + Hand.handHalfSize, (head.x + Monke.headHalfSize), (head.y + Monke.headHalfSize));
-            g2.drawImage(hand.getImage(), handCrd.x, handCrd.y, null);
-        }
-        // body
-        g2.drawImage(monke.headImage, head.x, head.y, null);
     }
 }

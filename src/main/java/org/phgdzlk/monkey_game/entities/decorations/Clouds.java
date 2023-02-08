@@ -10,8 +10,8 @@ import java.util.Random;
 
 public class Clouds {
     Random rand = new Random();
-    public static final int cloudHeight = 16, cloudWidth = 29;
-    public LinkedList<Point> coordinates = new LinkedList<>();
+    public static final int cloudHeight = 145, cloudWidth = 260;
+    public LinkedList<Point> clouds = new LinkedList<>();
     public final BufferedImage image;
 
     public Clouds() throws IOException {
@@ -19,21 +19,29 @@ public class Clouds {
     }
 
     public void update() {
-        int size = coordinates.size();
+        int size = clouds.size();
+        // generating clouds
         if (size < 5) {
-            int y = rand.nextInt(0, 300 - cloudHeight);
+            int y = rand.nextInt(0, 200 - cloudHeight);
             if (size == 0) {
-                coordinates.add(new Point(1210, y));
+                clouds.add(new Point(1210, y));
             } else {
-                assert coordinates.peek() != null; // for compilator inner harmony
-                int x = coordinates.peekLast().x + rand.nextInt(500, 1488);
-                coordinates.add(new Point(x, y));
+                assert clouds.peek() != null; // for compilator inner harmony
+                int x = clouds.peekLast().x + rand.nextInt(500, 1200);
+                clouds.add(new Point(x, y));
             }
-        } else {
-            assert coordinates.peek() != null; // for compilator inner harmony
-            if (coordinates.peek().x < -cloudWidth) {
-                coordinates.removeFirst();
-            }
+        }
+        // moving clouds to the left
+        for (var cloud : clouds) {
+            cloud.setLocation(cloud.x - ((300 - cloud.y) >> 5), cloud.y);
+        }
+        // deleting all clouds after they cross the left border of the screen
+        clouds.removeIf(cloud -> cloud.x < -cloudWidth);
+    }
+
+    public void draw(Graphics2D g2) {
+        for (var cloud : clouds) {
+            g2.drawImage(image, cloud.x, cloud.y, Clouds.cloudWidth, Clouds.cloudHeight, null);
         }
     }
 }

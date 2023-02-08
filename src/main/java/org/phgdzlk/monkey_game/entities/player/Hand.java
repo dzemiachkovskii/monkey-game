@@ -1,5 +1,7 @@
 package org.phgdzlk.monkey_game.entities.player;
 
+import org.phgdzlk.monkey_game.input_handlers.MouseHandler;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -9,31 +11,40 @@ import java.util.Objects;
 public class Hand {
     private final BufferedImage openHandImage;
     private final BufferedImage closeHandImage;
-    public static final int handSize = 36;
-    public static final int handHalfSize = handSize / 2;
-    public Point coordinates = new Point(600, 300);
+    private final Point pos = new Point(600, 300);
     public boolean isClenched = false;
+    public static final int handSize = 36;
+    public static final int handHalfSize = handSize >> 1;
 
     public Hand() throws IOException {
         openHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/open_hand.png")));
         closeHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/closed_hand.png")));
     }
 
-    public BufferedImage getImage() {
-        return isClenched ? closeHandImage : openHandImage;
+    public void update(int gameSpeed, MouseHandler mouseH) {
+        if (isClenched) {
+            pos.setLocation(pos.x - gameSpeed, pos.y);
+        } else {
+            int x = (pos.x + mouseH.coordinates.x) >> 1;
+            int y = (pos.y + mouseH.coordinates.y) >> 1;
+            pos.setLocation(x, y);
+        }
+        if (mouseH.isClicked) {
+            isClenched = !isClenched;
+        }
     }
 
-    public Point getCoordinates() {
-        return new Point(coordinates.x - handHalfSize, coordinates.y - handHalfSize);
+    public void draw(Graphics2D g2, Point head, int headHalfSize) {
+        g2.setStroke(new BasicStroke(15));
+        g2.drawLine((pos.x + handHalfSize), (pos.y + handHalfSize), (head.x + headHalfSize), (head.y + headHalfSize));
+        g2.drawImage(isClenched ? closeHandImage : openHandImage, pos.x, pos.y, null);
     }
 
-    public void switchClenchState() {
-        isClenched = !isClenched;
+    public int getX() {
+        return pos.x;
     }
 
-    public void approach(Point mouse) {
-        int x = (coordinates.x + mouse.x) >> 1;
-        int y = (coordinates.y + mouse.y) >> 1;
-        coordinates.setLocation(x, y);
+    public int getY() {
+        return pos.y;
     }
 }

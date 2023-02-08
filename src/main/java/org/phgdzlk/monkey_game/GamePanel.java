@@ -1,6 +1,7 @@
 package org.phgdzlk.monkey_game;
 
 import org.phgdzlk.monkey_game.entities.decorations.Clouds;
+import org.phgdzlk.monkey_game.entities.hints.MouseHint;
 import org.phgdzlk.monkey_game.entities.interactive.Vines;
 import org.phgdzlk.monkey_game.entities.player.Monke;
 import org.phgdzlk.monkey_game.input_handlers.KeyHandler;
@@ -18,6 +19,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int screenHeight = 600;
     public static final int FPS = 60;
     public static int gameSpeed = 4;
+    MouseHint mouseHint = new MouseHint();
     Monke monke = new Monke();
     Clouds clouds = new Clouds();
     Vines vines = new Vines();
@@ -73,6 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
         vines.draw(g2);
         monke.draw(g2);
 //        obstacles, herbs;
+        mouseHint.draw(g2, mouseH);
 
         g2.dispose();
     }

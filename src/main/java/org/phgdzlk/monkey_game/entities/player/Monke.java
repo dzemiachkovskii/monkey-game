@@ -1,5 +1,6 @@
 package org.phgdzlk.monkey_game.entities.player;
 
+import org.phgdzlk.monkey_game.entities.interactive.Vines;
 import org.phgdzlk.monkey_game.input_handlers.MouseHandler;
 
 import javax.imageio.ImageIO;
@@ -16,22 +17,21 @@ public class Monke {
     public static final int headHalfSize = headSize >> 1;
 
     public Monke() throws IOException {
-        hands[0] = new Hand();
-        hands[0].isClenched = true;
-        hands[1] = new Hand();
+        var handState = new HandState();
+        hands[0] = new Hand(handState, true);
+        hands[1] = new Hand(handState, false);
         image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/head.png")));
     }
 
-    public void update(int gameSpeed, MouseHandler mouseH) {
+    public void update(int gameSpeed, MouseHandler mouseH, Vines vines) {
         Point handAverage = new Point();
         for (Hand hand : hands) {
-            hand.update(gameSpeed, mouseH);
+            hand.update(gameSpeed, mouseH, vines);
             // get sum of hands positions
             int xSum = handAverage.x + hand.getX();
             int ySum = handAverage.y + hand.getY();
             handAverage.setLocation(xSum, ySum);
         }
-        mouseH.isClicked = false;
         // get average of hands positions
         handAverage.setLocation((handAverage.x >> 1), (handAverage.y >> 1));
         int xAverage = (handAverage.x + pos.x) >> 1;
@@ -46,8 +46,8 @@ public class Monke {
         }
     }
 
-    public boolean isAlive() {
-        return (!isSlidToTheLeft() && !isTouchedCigarette());
+    public boolean isDead() {
+        return (isSlidToTheLeft() || isTouchedCigarette());
     }
 
     private boolean isSlidToTheLeft() {

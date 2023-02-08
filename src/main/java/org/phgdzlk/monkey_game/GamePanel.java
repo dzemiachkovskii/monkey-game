@@ -1,7 +1,7 @@
 package org.phgdzlk.monkey_game;
 
 import org.phgdzlk.monkey_game.entities.decorations.Clouds;
-import org.phgdzlk.monkey_game.entities.interactive.Creepers;
+import org.phgdzlk.monkey_game.entities.interactive.Vines;
 import org.phgdzlk.monkey_game.entities.player.Monke;
 import org.phgdzlk.monkey_game.input_handlers.KeyHandler;
 import org.phgdzlk.monkey_game.input_handlers.MouseHandler;
@@ -17,10 +17,10 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int screenWidth = 1200;
     public static final int screenHeight = 600;
     public static final int FPS = 60;
-    public static int gameSpeed = 5;
+    public static int gameSpeed = 4;
     Monke monke = new Monke();
     Clouds clouds = new Clouds();
-    Creepers creepers = new Creepers();
+    Vines vines = new Vines();
 
     public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -58,10 +58,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        monke.update(gameSpeed, mouseH);
+        vines.update(gameSpeed, screenHeight);
+        monke.update(gameSpeed, mouseH, vines);
         clouds.update();
-        creepers.update();
-        if (monke.isAlive()) gameThread.interrupt();
+
+        if (monke.isDead()) gameThread.interrupt();
     }
 
     public void paintComponent(Graphics g) {
@@ -69,8 +70,9 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         clouds.draw(g2);
+        vines.draw(g2);
         monke.draw(g2);
-//        creepers, obstacles, herbs;
+//        obstacles, herbs;
 
         g2.dispose();
     }

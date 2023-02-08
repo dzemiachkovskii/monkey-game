@@ -1,5 +1,6 @@
 package org.phgdzlk.monkey_game;
 
+import org.phgdzlk.monkey_game.entities.decorations.Clouds;
 import org.phgdzlk.monkey_game.entities.player.Hand;
 import org.phgdzlk.monkey_game.entities.player.Monke;
 import org.phgdzlk.monkey_game.input_handlers.KeyHandler;
@@ -18,6 +19,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int FPS = 60;
     public static int gameSpeed = 5;
     Monke monke = new Monke();
+    Clouds clouds = new Clouds();
 
     public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -57,10 +59,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         for (Hand hand : monke.hands) {
             if (hand.isClenched) {
-                hand.x -= gameSpeed;
+                hand.coordinates.setLocation(hand.coordinates.x - gameSpeed, hand.coordinates.y);
             } else {
-                hand.x = mouseH.mouseX;
-                hand.y = mouseH.mouseY;
+                hand.approach(mouseH.coordinates);
             }
         }
         if (mouseH.isClicked) {
@@ -69,6 +70,10 @@ public class GamePanel extends JPanel implements Runnable {
             }
             mouseH.isClicked = false;
         }
+        clouds.update();
+        for (Point cloud : clouds.coordinates) {
+            cloud.setLocation(cloud.x - gameSpeed - 1, cloud.y);
+        }
         if (monke.isCrashed()) gameThread.interrupt();
     }
 
@@ -76,18 +81,33 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        drawClouds(g2);
         drawMonke(g2);
+        drawHerbs(g2);
 
         g2.dispose();
-        g.dispose();
+    }
+
+    private void drawHerbs(Graphics2D g2) {
+
+    }
+
+    private void drawClouds(Graphics2D g2) {
+        for (Point cloud : clouds.coordinates) {
+            g2.drawImage(clouds.image, cloud.x, cloud.y, (Clouds.cloudWidth * 3), (Clouds.cloudHeight * 3), null);
+        }
     }
 
     public void drawMonke(Graphics2D g2) {
-        // hands
+        Point head = monke.getCoordinates();
+        // arms
         for (var hand : monke.hands) {
-            g2.drawImage(hand.getImage(), hand.getX(), hand.getY(), null);
+            Point handCrd = hand.getCoordinates();
+            g2.setStroke(new BasicStroke(15));
+            g2.drawLine(handCrd.x + Hand.handHalfSize, handCrd.y + Hand.handHalfSize, (head.x + Monke.headHalfSize), (head.y + Monke.headHalfSize));
+            g2.drawImage(hand.getImage(), handCrd.x, handCrd.y, null);
         }
         // body
-        g2.drawImage(monke.headImage, monke.getBodyX(), monke.getBodyY(), null);
+        g2.drawImage(monke.headImage, head.x, head.y, null);
     }
 }

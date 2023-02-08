@@ -1,12 +1,13 @@
 package org.phgdzlk.monkey_game.entities.player;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
 public class Monke {
-    private int previousBodyX, previousBodyY;
+    private int x, y;
     public final BufferedImage headImage;
     public static final int headSize = 60;
     public static final int headHalfSize = headSize / 2;
@@ -19,24 +20,34 @@ public class Monke {
         headImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/head.png")));
     }
 
-    public int getBodyX() {
-        return ((hands[0].getX() + hands[1].getX()) >> 1) - headHalfSize;
+    public Point getCoordinates() {
+        Point[] hands = this.getHandCoordinates();
+        int x = ((hands[0].x + hands[1].x) >> 1) - headHalfSize;
+        int y = ((hands[0].y + hands[1].y + 100) >> 1) - headHalfSize;
+        this.x = (this.x + x) >> 1;
+        this.y = (this.y + y) >> 1;
+        return new Point(this.x, this.y);
     }
 
-    public int getBodyY() {
-        return ((hands[0].getY() + hands[1].getY() + 100) >> 1) - headHalfSize;
+    public Point[] getHandCoordinates() {
+        Point[] hands = new Point[this.hands.length];
+        for (int i = 0; i < hands.length; i++) {
+            hands[i] = this.hands[i].getCoordinates();
+        }
+        return hands;
     }
 
     public boolean isCrashed() {
-        if (this.getBodyX() < 0 || this.getBodyY() > 1200 - Hand.handSize || this.getBodyY() < 0 || this.getBodyY() > 600 - Hand.handSize) {
+        Point head = this.getCoordinates();
+        if (head.x < 0 || head.y < 0 || head.x > 1200 - Hand.handSize || head.y > 600 - Hand.handSize) {
             return true;
         }
         for (Hand hand : hands) {
-            if (hand.getX() < 2 || hand.getY() < 2 || hand.getX() > 1148 || hand.getY() > 548) {
+            Point handCrds = hand.getCoordinates();
+            if (handCrds.x < 2 || handCrds.y < 2 || handCrds.x > 1148 || handCrds.y > 548) {
                 return true;
             }
         }
         return false;
     }
 }
-

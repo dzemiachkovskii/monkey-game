@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        JFrame window = new JFrame("GRIPPY APE");
+        JFrame window = new JFrame("ГРУСНИ ПОН");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
 

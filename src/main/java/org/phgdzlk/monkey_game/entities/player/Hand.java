@@ -1,17 +1,17 @@
 package org.phgdzlk.monkey_game.entities.player;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
 public class Hand {
-    public final BufferedImage openHandImage;
-    public final BufferedImage closeHandImage;
+    private final BufferedImage openHandImage;
+    private final BufferedImage closeHandImage;
     public static final int handSize = 36;
     public static final int handHalfSize = handSize / 2;
-    public int x = 600;
-    public int y = 300;
+    public Point coordinates = new Point(600, 300);
     public boolean isClenched = false;
 
     public Hand() throws IOException {
@@ -20,22 +20,20 @@ public class Hand {
     }
 
     public BufferedImage getImage() {
-        if (isClenched) {
-            return closeHandImage;
-        } else {
-            return openHandImage;
-        }
+        return isClenched ? closeHandImage : openHandImage;
     }
 
-    public int getX() {
-        return x - handHalfSize;
-    }
-
-    public int getY() {
-        return y - handHalfSize;
+    public Point getCoordinates() {
+        return new Point(coordinates.x - handHalfSize, coordinates.y - handHalfSize);
     }
 
     public void switchClenchState() {
         isClenched = !isClenched;
+    }
+
+    public void approach(Point mouse) {
+        int x = (coordinates.x + mouse.x) >> 1;
+        int y = (coordinates.y + mouse.y) >> 1;
+        coordinates.setLocation(x, y);
     }
 }

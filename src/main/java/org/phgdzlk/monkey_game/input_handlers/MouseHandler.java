@@ -1,17 +1,17 @@
 package org.phgdzlk.monkey_game.input_handlers;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 public class MouseHandler implements MouseListener, MouseMotionListener {
-    public int mouseX = 100, mouseY = 100;
+    public Point coordinates = new Point();
     public boolean isClicked, leftButton;
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        mouseX = e.getX();
-        mouseY = e.getY();
+        coordinates.setLocation(e.getX(), e.getY());
     }
 
     @Override

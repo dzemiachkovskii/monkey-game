@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="monkey_game" />
-        <module name="monkey-game" />
+        <module name="grippy_ape" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="grippy-ape" target="19" />
+    </bytecodeTargetLevel>
   </component>
 </project>

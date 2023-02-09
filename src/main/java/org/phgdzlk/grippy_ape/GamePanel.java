@@ -3,6 +3,7 @@ package org.phgdzlk.grippy_ape;
 import org.phgdzlk.grippy_ape.entities.decorations.Clouds;
 import org.phgdzlk.grippy_ape.entities.hints.MouseHint;
 import org.phgdzlk.grippy_ape.entities.interactive.Vines;
+import org.phgdzlk.grippy_ape.entities.obstacles.Obstacles;
 import org.phgdzlk.grippy_ape.entities.player.Monke;
 import org.phgdzlk.grippy_ape.input_handlers.KeyHandler;
 import org.phgdzlk.grippy_ape.input_handlers.MouseHandler;
@@ -24,15 +25,17 @@ public class GamePanel extends JPanel implements Runnable {
     Monke monke = new Monke();
     Clouds clouds = new Clouds();
     Vines vines = new Vines();
+    Obstacles obstacles = new Obstacles();
 
     public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-        this.setBackground(new Color(0x1BCE7E));
+        this.setBackground(new Color(0x28AEFA));
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.addMouseListener(mouseH);
         this.addMouseMotionListener(mouseH);
         this.setFocusable(true);
+        // make cursor invisible
         BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
         Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
                 cursorImg, new Point(0, 0), "blank cursor");
@@ -66,6 +69,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         vines.update(gameSpeed, screenHeight);
+        obstacles.update(gameSpeed, screenHeight);
         monke.update(gameSpeed, mouseH, vines);
         clouds.update();
 
@@ -79,7 +83,8 @@ public class GamePanel extends JPanel implements Runnable {
         clouds.draw(g2);
         vines.draw(g2, screenHeight);
         monke.draw(g2);
-//        obstacles, herbs;
+        obstacles.draw(g2);
+//        herbs;
         mouseHint.draw(g2, mouseH);
 
         g2.dispose();

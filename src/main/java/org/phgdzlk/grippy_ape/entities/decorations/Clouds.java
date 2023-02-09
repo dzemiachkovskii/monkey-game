@@ -9,39 +9,40 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Clouds {
-    Random rand = new Random();
-    public static final int cloudHeight = 145, cloudWidth = 260;
-    public LinkedList<Point> clouds = new LinkedList<>();
-    public final BufferedImage image;
+    private final Random rand = new Random();
+    private final BufferedImage image;
+    private final LinkedList<Point> units;
+    public static final int width = 260, height = 145;
+
 
     public Clouds() throws IOException {
         image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/cloud.png")));
+        units = new LinkedList<>();
     }
 
     public void update() {
-        int size = clouds.size();
+        int size = units.size();
         // generating clouds
         if (size < 5) {
-            int y = rand.nextInt(0, 200 - cloudHeight);
+            int y = rand.nextInt(0, 200 - height);
             if (size == 0) {
-                clouds.add(new Point(1210, y));
+                units.add(new Point(1210, y));
             } else {
-                assert clouds.peek() != null; // for compilator inner harmony
-                int x = clouds.peekLast().x + rand.nextInt(500, 1200);
-                clouds.add(new Point(x, y));
+                assert units.peek() != null; // for compilator inner harmony
+                int x = units.peekLast().x + rand.nextInt(500, 1200);
+                units.add(new Point(x, y));
             }
         }
         // moving clouds to the left
-        for (var cloud : clouds) {
-            cloud.setLocation(cloud.x - ((300 - cloud.y) >> 5), cloud.y);
-        }
+        units.forEach(cloud ->
+                cloud.setLocation(cloud.x - ((300 - cloud.y) >> 5), cloud.y));
         // deleting all clouds after they cross the left border of the screen
-        clouds.removeIf(cloud -> cloud.x < -cloudWidth);
+        units.removeIf(cloud -> cloud.x < -width);
     }
 
     public void draw(Graphics2D g2) {
-        for (var cloud : clouds) {
-            g2.drawImage(image, cloud.x, cloud.y, Clouds.cloudWidth, Clouds.cloudHeight, null);
-        }
+        units.forEach(cloud ->
+                g2.drawImage(image, cloud.x, cloud.y, width, height, null)
+        );
     }
 }

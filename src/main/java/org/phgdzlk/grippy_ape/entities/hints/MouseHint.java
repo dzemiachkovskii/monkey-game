@@ -11,9 +11,7 @@ import java.util.Objects;
 public class MouseHint {
     private final BufferedImage left_click;
     private final BufferedImage right_click;
-    private final int x;
-    private final int width;
-    private final int height;
+    private final int x, width, height;
 
     public MouseHint(int screenWidth) throws IOException {
         left_click = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/mouse_hint_left.png")));
@@ -29,3 +27,4 @@ public class MouseHint {
         g2.drawImage(mouseH.leftButton ? left_click : right_click, x, 10, width, height, null);
     }
 }
+// probably I should move this class to somewhere else...

@@ -9,12 +9,13 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Herbs {
-    Random rand = new Random();
-    public static final int cloudHeight = 16, cloudWidth = 29;
-    public LinkedList<Point> coordinates = new LinkedList<>();
-    public final BufferedImage image;
+    private final Random rand = new Random();
+    private final BufferedImage image;
+    private final LinkedList<Point> units;
+    public static final int width = 42, height = 42;
 
     public Herbs() throws IOException {
         image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/herb.png")));
+        units = new LinkedList<>();
     }
 }

@@ -7,20 +7,23 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Monke {
-    public final BufferedImage image;
-    private final Point pos = new Point(600, 300);
-    public Hand[] hands = new Hand[2];
-    public static final int headSize = 60;
-    public static final int headHalfSize = headSize >> 1;
+    private final BufferedImage image;
+    private final Point pos;
+    private final ArrayList<Hand> hands;
+    public static final int width = 60, height = 60;
+    public static final int halfWidth = width >> 1;
 
     public Monke() throws IOException {
         var handState = new HandState();
-        hands[0] = new Hand(handState, true);
-        hands[1] = new Hand(handState, false);
+        hands = new ArrayList<>(2);
+        hands.add(new Hand(handState, true));
+        hands.add(new Hand(handState, false));
         image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/head.png")));
+        pos = new Point(600, 300);
     }
 
     public void update(int gameSpeed, MouseHandler mouseH, Vines vines) {
@@ -44,10 +47,9 @@ public class Monke {
     }
 
     public void draw(Graphics2D g2) {
-        for (var hand : hands) {
-            hand.draw(g2, pos, headHalfSize);
-            g2.drawImage(image, pos.x, pos.y, null);
-        }
+        hands.forEach(hand ->
+                hand.draw(g2, pos, halfWidth));
+        g2.drawImage(image, pos.x, pos.y, width, height, null);
     }
 
     public boolean isDead() {
@@ -55,7 +57,7 @@ public class Monke {
     }
 
     private boolean isSlidToTheLeft() {
-        return (pos.x < 0 || hands[0].getX() < 0 || hands[1].getX() < 0);
+        return (pos.x < 0 || hands.stream().anyMatch(hand -> hand.getX() < 0));
     }
 
     private boolean isTouchedCigarette() {

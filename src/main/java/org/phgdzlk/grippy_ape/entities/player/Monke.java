@@ -36,6 +36,10 @@ public class Monke {
         handAverage.setLocation((handAverage.x >> 1), (handAverage.y >> 1));
         int xAverage = (handAverage.x + pos.x) >> 1;
         int yAverage = (handAverage.y + pos.y) >> 1;
+        xAverage = (xAverage + pos.x) >> 1;
+        yAverage = (yAverage + pos.y) >> 1;
+        xAverage = (xAverage + pos.x) >> 1;
+        yAverage = (yAverage + pos.y) >> 1;
         pos.setLocation(xAverage, yAverage);
     }
 

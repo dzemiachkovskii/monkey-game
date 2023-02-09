@@ -18,9 +18,12 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
     public void mousePressed(MouseEvent e) {
         int button = leftButton ? MouseEvent.BUTTON1 : MouseEvent.BUTTON3;
         if (e.getButton() == button) {
-            leftButton = !leftButton;
             isClicked = true;
         }
+    }
+
+    public void switchButton() {
+        leftButton = !leftButton;
     }
 
     @Override

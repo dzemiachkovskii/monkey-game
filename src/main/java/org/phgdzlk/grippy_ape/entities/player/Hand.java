@@ -43,6 +43,7 @@ public class Hand {
                             // right bound of vine shifed right by half a hand is greater than a hand right bound
                             && vineX + Vines.vineSize + handHalfSize > pos.x + handSize)) {
                 handState.switchHands();
+                mouseH.switchButton();
             }
             mouseH.isClicked = false;
         }

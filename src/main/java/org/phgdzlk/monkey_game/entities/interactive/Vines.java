@@ -39,10 +39,10 @@ public class Vines {
         vines.removeIf(vine -> vine.x < -vineSize);
     }
 
-    public void draw(Graphics2D g2) {
-        for (var vine : vines) {
-            for (int y = 0; y < vine.y; y += 64) {
-                g2.drawImage(image, vine.x, y, vineSize, vineSize, null);
+    public void draw(Graphics2D g2, int screenHeight) {
+        for (var vine : getVines()) {
+            for (int y = 0; y < screenHeight; y += 64) {
+                g2.drawImage(image, vine, y, vineSize, vineSize, null);
             }
         }
     }

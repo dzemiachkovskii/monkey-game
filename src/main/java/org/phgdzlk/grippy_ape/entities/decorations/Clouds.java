@@ -9,10 +9,10 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Clouds {
+    public static final int width = 260, height = 145;
     private final Random rand = new Random();
     private final BufferedImage image;
     private final LinkedList<Point> units;
-    public static final int width = 260, height = 145;
 
 
     public Clouds() throws IOException {

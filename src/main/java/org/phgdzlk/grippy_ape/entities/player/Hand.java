@@ -10,14 +10,14 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Hand {
+    public static final Color armColor = new Color(86, 48, 0);
+    public static final int width = 36, height = 36; // TODO add to pos Rectangle
+    public static final int halfWidth = width >> 1;
     private final BufferedImage openHandImage;
     private final BufferedImage closeHandImage;
-    private final Point pos;
+    private final Point pos; // TODO replace point with Rectangle class
     private final HandState handState;
     private final boolean isRight;
-    public static final Color armColor = new Color(86, 48, 0);
-    public static final int width = 36, height = 36;
-    public static final int halfWidth = width >> 1;
 
     public Hand(HandState handState, boolean isRight) throws IOException {
         this.isRight = isRight;
@@ -36,6 +36,7 @@ public class Hand {
             pos.setLocation(x, y);
 
             if (mouseH.isClicked) {
+                // TODO make new collision check with usage of Rectangle class
                 // check if the hand is over one of the vines
                 if (vines.getVines().stream().anyMatch(vineX ->
                         // left bound of vine shifted left by half a hand is lower than a hand left bound

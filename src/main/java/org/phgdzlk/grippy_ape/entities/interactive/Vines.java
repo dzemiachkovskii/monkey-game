@@ -10,10 +10,10 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Vines {
+    public static final int width = 64, height = 64;
     private final Random rand = new Random();
     private final BufferedImage image;
     private final LinkedList<Point> units;
-    public static final int width = 64, height = 64;
 
     public Vines() throws IOException {
         image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/vine.png")));
@@ -33,24 +33,22 @@ public class Vines {
             }
         }
         // moving vines to the left
-        units.forEach(vine ->
-                vine.setLocation((vine.x - gameSpeed), vine.y));
+        units.forEach(vine -> vine.setLocation((vine.x - gameSpeed), vine.y));
         // deleting all vines after they cross the left border of the screen
         units.removeIf(vine -> vine.x < -width);
     }
 
     public void draw(Graphics2D g2, int screenHeight) {
-        for (var vine : getVines()) {
+        for (var vine : units) {
             for (int y = 0; y < screenHeight; y += 64) {
-                g2.drawImage(image, vine, y, width, height, null);
+                g2.drawImage(image, vine.x, y, width, height, null);
             }
         }
     }
 
     public ArrayList<Integer> getVines() {
         var vineList = new ArrayList<Integer>();
-        units.forEach(vine ->
-                vineList.add(vine.x));
+        units.forEach(vine -> vineList.add(vine.x));
         return vineList;
     }
 }

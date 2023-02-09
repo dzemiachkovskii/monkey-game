@@ -1,6 +1,7 @@
 package org.phgdzlk.grippy_ape;
 
 import org.phgdzlk.grippy_ape.entities.decorations.Clouds;
+import org.phgdzlk.grippy_ape.entities.decorations.Herbs;
 import org.phgdzlk.grippy_ape.entities.hints.MouseHint;
 import org.phgdzlk.grippy_ape.entities.interactive.Vines;
 import org.phgdzlk.grippy_ape.entities.obstacles.Obstacles;
@@ -14,18 +15,19 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
-    Thread gameThread;
-    KeyHandler keyH = new KeyHandler();
-    MouseHandler mouseH = new MouseHandler();
     public static final int screenWidth = 1200;
     public static final int screenHeight = 600;
     public static final int FPS = 60;
     public static int gameSpeed = 4;
+    Thread gameThread;
+    KeyHandler keyH = new KeyHandler();
+    MouseHandler mouseH = new MouseHandler();
     MouseHint mouseHint = new MouseHint(screenWidth);
     Monke monke = new Monke();
     Clouds clouds = new Clouds();
     Vines vines = new Vines();
     Obstacles obstacles = new Obstacles();
+    Herbs herbs = new Herbs(screenWidth);
 
     public GamePanel() throws IOException {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -37,8 +39,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
         // make cursor invisible
         BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-                cursorImg, new Point(0, 0), "blank cursor");
+        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
         this.setCursor(blankCursor);
     }
 
@@ -72,6 +73,7 @@ public class GamePanel extends JPanel implements Runnable {
         obstacles.update(gameSpeed, screenHeight);
         monke.update(gameSpeed, mouseH, vines);
         clouds.update();
+        herbs.update(gameSpeed, screenHeight);
 
         if (monke.isDead()) gameThread.interrupt();
     }
@@ -84,7 +86,7 @@ public class GamePanel extends JPanel implements Runnable {
         vines.draw(g2, screenHeight);
         monke.draw(g2);
         obstacles.draw(g2);
-//        herbs;
+        herbs.draw(g2);
         mouseHint.draw(g2, mouseH);
 
         g2.dispose();

@@ -1,5 +1,7 @@
 package org.phgdzlk.grippy_ape.entities.obstacles;
 
+import org.phgdzlk.grippy_ape.entities.decorations.HerbUnit;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,10 +12,10 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Obstacles {
+    public static final int width = 90, height = 90;
     private final Random rand = new Random();
     private final BufferedImage image;
     private final LinkedList<Point> units;
-    public static final int width = 90, height = 90;
 
     public Obstacles() throws IOException {
         image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/cigarette.png")));
@@ -24,7 +26,7 @@ public class Obstacles {
         int size = units.size();
         // generating obstacles
         if (size < 10) {
-            int y = rand.nextInt(20, screenHeight - width - 20);
+            int y = rand.nextInt(HerbUnit.height, screenHeight - width - HerbUnit.height);
             if (size == 0) {
                 units.add(new Point(1210, y));
             } else {
@@ -40,8 +42,7 @@ public class Obstacles {
     }
 
     public void draw(Graphics2D g2) {
-        units.forEach(obstacle ->
-                g2.drawImage(image, obstacle.x, obstacle.y, width, height, null));
+        units.forEach(obstacle -> g2.drawImage(image, obstacle.x, obstacle.y, width, height, null));
     }
 
     public ArrayList<Point> getObstacles() {

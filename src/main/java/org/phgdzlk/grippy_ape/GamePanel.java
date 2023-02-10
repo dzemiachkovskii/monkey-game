@@ -75,7 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
         clouds.update();
         herbs.update(gameSpeed, screenHeight);
 
-        if (monke.isDead()) gameThread.interrupt();
+        if (monke.isDead(obstacles)) gameThread.interrupt();
     }
 
     public void paintComponent(Graphics g) {

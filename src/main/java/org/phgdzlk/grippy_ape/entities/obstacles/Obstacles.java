@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Obstacles {
-    public static final int width = 90, height = 90;
+    public static final int width = 72, height = 72;
     private final Random rand = new Random();
     private final BufferedImage image;
     private final LinkedList<Point> units;
@@ -45,7 +45,13 @@ public class Obstacles {
         units.forEach(obstacle -> g2.drawImage(image, obstacle.x, obstacle.y, width, height, null));
     }
 
-    public ArrayList<Point> getObstacles() {
-        return new ArrayList<>(units);
+    public ArrayList<Polygon> getObstacles() {
+        ArrayList<Polygon> obstaclePolygons = new ArrayList<>();
+        units.forEach(obstacle -> {
+            var x = new int[]{obstacle.x, obstacle.x + 6, obstacle.x + 71, obstacle.x + 65};
+            var y = new int[]{obstacle.y + 6, obstacle.y, obstacle.y + 65, obstacle.y + 71};
+            obstaclePolygons.add(new Polygon(x, y, 4));
+        });
+        return obstaclePolygons;
     }
 }

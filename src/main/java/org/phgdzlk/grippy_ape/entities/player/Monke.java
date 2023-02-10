@@ -1,6 +1,7 @@
 package org.phgdzlk.grippy_ape.entities.player;
 
 import org.phgdzlk.grippy_ape.entities.interactive.Vines;
+import org.phgdzlk.grippy_ape.entities.obstacles.Obstacles;
 import org.phgdzlk.grippy_ape.input_handlers.MouseHandler;
 
 import javax.imageio.ImageIO;
@@ -12,10 +13,12 @@ import java.util.Objects;
 
 public class Monke {
     private final BufferedImage image;
-    private final Point pos;
+    private final Point center;
+    private final Rectangle hitBox;
     private final ArrayList<Hand> hands;
     public static final int width = 60, height = 60;
     public static final int halfWidth = width >> 1;
+    public static final int halfHeight = height >> 1;
 
     public Monke() throws IOException {
         var handState = new HandState();
@@ -23,7 +26,8 @@ public class Monke {
         hands.add(new Hand(handState, true));
         hands.add(new Hand(handState, false));
         image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/head.png")));
-        pos = new Point(600, 300);
+        center = new Point(600, 300);
+        hitBox = new Rectangle(center.x - halfWidth, center.y - halfHeight, width, height);
     }
 
     public void update(int gameSpeed, MouseHandler mouseH, Vines vines) {
@@ -37,30 +41,33 @@ public class Monke {
         }
         // get average of hands positions
         handAverage.setLocation((handAverage.x >> 1), (handAverage.y >> 1));
-        int xAverage = (handAverage.x + pos.x) >> 1;
-        int yAverage = (handAverage.y + pos.y) >> 1;
-        xAverage = (xAverage + pos.x) >> 1;
-        yAverage = (yAverage + pos.y) >> 1;
-        xAverage = (xAverage + pos.x) >> 1;
-        yAverage = (yAverage + pos.y) >> 1;
-        pos.setLocation(xAverage, yAverage);
+        int xAverage = (handAverage.x + center.x) >> 1;
+        int yAverage = (handAverage.y + center.y) >> 1;
+        xAverage = (xAverage + center.x) >> 1;
+        yAverage = (yAverage + center.y) >> 1;
+        xAverage = (xAverage + center.x) >> 1;
+        yAverage = (yAverage + center.y) >> 1;
+        center.setLocation(xAverage, yAverage);
+        hitBox.setLocation(center.x - halfWidth, center.y - halfHeight);
     }
 
     public void draw(Graphics2D g2) {
         hands.forEach(hand ->
-                hand.draw(g2, pos, halfWidth));
-        g2.drawImage(image, pos.x, pos.y, width, height, null);
+                hand.draw(g2, new Point(hitBox.x, hitBox.y), halfWidth));
+        g2.drawImage(image, hitBox.x, hitBox.y, hitBox.width, hitBox.height, null);
     }
 
-    public boolean isDead() {
-        return (isSlidToTheLeft() || isTouchedCigarette());
+    public boolean isDead(Obstacles o) {
+        return (isSlidToTheLeft() || isTouchedCigarette(o));
     }
 
     private boolean isSlidToTheLeft() {
-        return (pos.x < 0 || hands.stream().anyMatch(hand -> hand.getX() < 0));
+        return (center.x < 0 || hands.stream().anyMatch(hand -> hand.getX() < 0));
     }
 
-    private boolean isTouchedCigarette() {
-        return false;
+    private boolean isTouchedCigarette(Obstacles o) {
+        return o.getObstacles().stream().anyMatch(obstacle -> obstacle.intersects(hitBox))
+                ||
+                hands.stream().anyMatch(hand -> hand.intersetcsWith(o));
     }
 }

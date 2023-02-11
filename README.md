@@ -2,4 +2,4 @@
 
 Скроллер для тех, кто бросает курить
 
-![PREVIEW](Images/gameplay.png)
+![PREVIEW](images/gameplay.png)

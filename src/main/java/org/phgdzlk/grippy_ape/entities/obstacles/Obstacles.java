@@ -1,7 +1,5 @@
 package org.phgdzlk.grippy_ape.entities.obstacles;
 
-import org.phgdzlk.grippy_ape.entities.decorations.HerbUnit;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -26,7 +24,7 @@ public class Obstacles {
         int size = units.size();
         // generating obstacles
         if (size < 10) {
-            int y = rand.nextInt(HerbUnit.height, screenHeight - width - HerbUnit.height);
+            int y = rand.nextInt(10, screenHeight - height - 10);
             if (size == 0) {
                 units.add(new Point(1210, y));
             } else {
@@ -36,7 +34,7 @@ public class Obstacles {
             }
         }
         // moving obstacles to the left
-        units.forEach(obstacle -> obstacle.setLocation((obstacle.x - gameSpeed - 1), obstacle.y));
+        units.forEach(obstacle -> obstacle.setLocation((obstacle.x - (gameSpeed - 1)), obstacle.y));
         // deleting all clouds after they cross the left border of the screen
         units.removeIf(obstacle -> obstacle.x < -width);
     }

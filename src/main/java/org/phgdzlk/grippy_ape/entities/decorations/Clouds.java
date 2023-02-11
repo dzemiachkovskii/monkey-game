@@ -24,7 +24,7 @@ public class Clouds {
         int size = units.size();
         // generating clouds
         if (size < 5) {
-            int y = rand.nextInt(0, 200 - height);
+            int y = rand.nextInt(0, 150);
             if (size == 0) {
                 units.add(new Point(1210, y));
             } else {
@@ -35,7 +35,7 @@ public class Clouds {
         }
         // moving clouds to the left
         units.forEach(cloud ->
-                cloud.setLocation(cloud.x - ((300 - cloud.y) >> 5), cloud.y));
+                cloud.setLocation(cloud.x - (3 - (cloud.y >> 6)), cloud.y));
         // deleting all clouds after they cross the left border of the screen
         units.removeIf(cloud -> cloud.x < -width);
     }

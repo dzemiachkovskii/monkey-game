@@ -29,8 +29,8 @@ public class Herbs {
         int size = units.size();
         // generating herbs
         if (size < amountOfHerbs) {
-            int herbY = screenHeight - HerbUnit.height + rand.nextInt(25);
-            int palmTreeY = -rand.nextInt(25);
+            int herbY = screenHeight - HerbUnit.height + rand.nextInt(30);
+            int palmTreeY = -rand.nextInt(30);
             if (size == 0) {
                 // adding herb
                 units.add(new HerbUnit(images[count++], new Point(0, herbY)));
@@ -47,7 +47,7 @@ public class Herbs {
             if (count > 3) count = 0;
         }
         // move herbs to the left
-        units.forEach(herb -> herb.pos().setLocation(herb.pos().x - gameSpeed, herb.pos().y));
+        units.forEach(herb -> herb.pos().setLocation(herb.pos().x - (gameSpeed + 1), herb.pos().y));
         // deleting all herbs after they cross left border of the screen
         units.removeIf(herb -> herb.pos().x < -HerbUnit.width);
     }

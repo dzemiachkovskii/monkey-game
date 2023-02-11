@@ -17,12 +17,14 @@ public class Hand {
     public static final int halfHeight = height >> 1;
     private final BufferedImage openHandImage;
     private final BufferedImage closeHandImage;
-    private final Point center = new Point(600, 300);
+    private final Point center;
     private final Rectangle hitBox;
     private final HandState handState;
     private final boolean isRight;
 
     public Hand(HandState handState, boolean isRight) throws IOException {
+        int y = isRight ? 400 : 200;
+        center = new Point(630, y);
         openHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/open_hand.png")));
         closeHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/closed_hand.png")));
         this.handState = handState;

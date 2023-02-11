@@ -9,10 +9,12 @@ import org.phgdzlk.grippy_ape.entities.player.Monke;
 import org.phgdzlk.grippy_ape.input_handlers.KeyHandler;
 import org.phgdzlk.grippy_ape.input_handlers.MouseHandler;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -21,6 +23,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int timerX = screenWidth >> 4;
     public static final int timerY = screenHeight >> 4;
     public static final int FPS = 70;
+    public static Cursor customCursor;
     public static GameState gameState = GameState.MENU;
     public static MenuChoice menuChoice = MenuChoice.EASY;
     public static int gameSpeed;
@@ -44,10 +47,15 @@ public class GamePanel extends JPanel implements Runnable {
         this.addMouseListener(mouseH);
         this.addMouseMotionListener(mouseH);
         this.setFocusable(true);
-        // make cursor invisible
-        BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
-        this.setCursor(blankCursor);
+
+        // set custom cursor
+        try {
+            BufferedImage cursorImg = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/custom_cursor.png")));
+            customCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
+            this.setCursor(customCursor);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void startGameThread() {
@@ -151,7 +159,11 @@ public class GamePanel extends JPanel implements Runnable {
                     case 4 -> this.setBackground(SkyColor.MEDIUM.getColor());
                     case 6 -> this.setBackground(SkyColor.HARD.getColor());
                 }
-                if (secondsPassed > 3) {
+                if (secondsPassed <= 3) {
+                    vines.generate(screenHeight);
+                    clouds.generate();
+                    herbs.generate(screenHeight);
+                } else {
                     vines.update(gameSpeed, screenHeight);
                     obstacles.update(gameSpeed, screenHeight);
                     monke.update(gameSpeed, mouseH, vines);
@@ -215,20 +227,21 @@ public class GamePanel extends JPanel implements Runnable {
                 if (menuChoice == MenuChoice.QUIT) g2.fillOval((x - 25), (y - 20), 15, 15);
             }
             case PLAY -> {
-                if (secondsPassed <= 3) {
-                    g2.drawString(String.format("БРОСАЮ КУРИТЬ ЧЕРЕЗ %d...", 4 - secondsPassed), 10, 10);
-                    monke.draw(g2);
-                } else {
-                    clouds.draw(g2);
-                    vines.draw(g2, screenHeight);
-                    monke.draw(g2);
-                    obstacles.draw(g2);
-                    herbs.draw(g2);
-                    mouseHint.draw(g2, mouseH);
+                clouds.draw(g2);
+                vines.draw(g2, screenHeight);
+                monke.draw(g2);
+                obstacles.draw(g2);
+                herbs.draw(g2);
+                mouseHint.draw(g2, mouseH);
 
+                if (secondsPassed <= 3) {
                     g2.setFont(new Font("arial", Font.BOLD, 42));
                     g2.setColor(Color.RED);
-                    g2.drawString(String.format("Не курил %d секунд", secondsPassed - 3), timerX, timerY);
+                    g2.drawString(String.format("БРОСАЮ КУРИТЬ ЧЕРЕЗ %d...", 4 - secondsPassed), timerX, timerY);
+                } else {
+                    g2.setFont(new Font("arial", Font.BOLD, 42));
+                    g2.setColor(Color.RED);
+                    g2.drawString(String.format("НЕ КУРИЛ %d СЕКУНД", secondsPassed - 4), timerX, timerY);
                 }
             }
             case GAMEOVER -> {

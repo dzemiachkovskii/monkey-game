@@ -26,7 +26,7 @@ public class Monke {
         hands.add(new Hand(handState, true));
         hands.add(new Hand(handState, false));
         image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/head.png")));
-        center = new Point(600, 300);
+        center = new Point(630, 300);
         hitBox = new Rectangle(center.x - halfWidth, center.y - halfHeight, width, height);
     }
 

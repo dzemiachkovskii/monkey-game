@@ -21,18 +21,7 @@ public class Clouds {
     }
 
     public void update() {
-        int size = units.size();
-        // generating clouds
-        if (size < 5) {
-            int y = rand.nextInt(0, 150);
-            if (size == 0) {
-                units.add(new Point(1210, y));
-            } else {
-                assert units.peek() != null; // for compilator inner harmony
-                int x = units.peekLast().x + rand.nextInt(500, 1200);
-                units.add(new Point(x, y));
-            }
-        }
+        generate();
         // moving clouds to the left
         units.forEach(cloud ->
                 cloud.setLocation(cloud.x - (3 - (cloud.y >> 6)), cloud.y));
@@ -44,5 +33,19 @@ public class Clouds {
         units.forEach(cloud ->
                 g2.drawImage(image, cloud.x, cloud.y, width, height, null)
         );
+    }
+
+    public void generate() {
+        int size = units.size();
+        if (size < 5) {
+            int y = rand.nextInt(0, 150);
+            if (size == 0) {
+                units.add(new Point(1210, y));
+            } else {
+                assert units.peek() != null; // for compilator inner harmony
+                int x = units.peekLast().x + rand.nextInt(500, 1200);
+                units.add(new Point(x, y));
+            }
+        }
     }
 }

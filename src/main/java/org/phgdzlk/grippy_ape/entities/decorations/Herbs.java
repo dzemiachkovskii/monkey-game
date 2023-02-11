@@ -26,8 +26,19 @@ public class Herbs {
     }
 
     public void update(int gameSpeed, int screenHeight) {
+        generate(screenHeight);
+        // move herbs to the left
+        units.forEach(herb -> herb.pos().setLocation(herb.pos().x - (gameSpeed + 1), herb.pos().y));
+        // deleting all herbs after they cross left border of the screen
+        units.removeIf(herb -> herb.pos().x < -HerbUnit.width);
+    }
+
+    public void draw(Graphics2D g2) {
+        units.forEach(herb -> g2.drawImage(herb.image(), herb.pos().x, herb.pos().y, HerbUnit.width, HerbUnit.height, null));
+    }
+
+    public void generate(int screenHeight) {
         int size = units.size();
-        // generating herbs
         if (size < amountOfHerbs) {
             int herbY = screenHeight - HerbUnit.height + rand.nextInt(30);
             int palmTreeY = -rand.nextInt(30);
@@ -46,13 +57,5 @@ public class Herbs {
             }
             if (count > 3) count = 0;
         }
-        // move herbs to the left
-        units.forEach(herb -> herb.pos().setLocation(herb.pos().x - (gameSpeed + 1), herb.pos().y));
-        // deleting all herbs after they cross left border of the screen
-        units.removeIf(herb -> herb.pos().x < -HerbUnit.width);
-    }
-
-    public void draw(Graphics2D g2) {
-        units.forEach(herb -> g2.drawImage(herb.image(), herb.pos().x, herb.pos().y, HerbUnit.width, HerbUnit.height, null));
     }
 }

@@ -10,10 +10,10 @@ import java.util.Objects;
 import java.util.Random;
 
 public class Vines {
+    private static final int width = 64, height = 64;
     private final Random rand = new Random();
     private final BufferedImage image;
     private final LinkedList<Point> units;
-    private static final int width = 64, height = 64;
 
     public Vines() throws IOException {
         image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/vine.png")));
@@ -21,17 +21,7 @@ public class Vines {
     }
 
     public void update(int gameSpeed, int screenHeight) {
-        int size = units.size();
-        // generating vines
-        if (size < 5) {
-            if (size == 0) {
-                units.add(new Point(600, screenHeight));
-            } else {
-                assert units.peek() != null; // for compilator inner harmony
-                int x = units.peekLast().x + rand.nextInt(250, 350);
-                units.add(new Point(x, screenHeight));
-            }
-        }
+        generate(screenHeight);
         // moving vines to the left
         units.forEach(vine -> vine.setLocation((vine.x - gameSpeed), vine.y));
         // deleting all vines after they cross the left border of the screen
@@ -46,6 +36,20 @@ public class Vines {
         }
         getVineHitboxes().forEach(vine ->
                 g2.fillRect(vine.x, vine.y, vine.width, 0));
+    }
+
+    public void generate(int screenHeight) {
+        int size = units.size();
+        // generating vines
+        if (size < 5) {
+            if (size == 0) {
+                units.add(new Point(600, screenHeight));
+            } else {
+                assert units.peek() != null; // for compilator inner harmony
+                int x = units.peekLast().x + rand.nextInt(250, 350);
+                units.add(new Point(x, screenHeight));
+            }
+        }
     }
 
     public ArrayList<Rectangle> getVineHitboxes() {

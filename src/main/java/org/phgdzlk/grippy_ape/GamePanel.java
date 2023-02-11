@@ -27,8 +27,9 @@ public class GamePanel extends JPanel implements Runnable {
     public static GameState gameState = GameState.MENU;
     public static MenuChoice menuChoice = MenuChoice.EASY;
     public static int gameSpeed;
-    public static long timer = 0;
+    public static long timer;
     public static long secondsPassed;
+    public static long secondsSurvived;
     Thread gameThread;
     KeyHandler keyH = new KeyHandler();
     MouseHandler mouseH = new MouseHandler();
@@ -70,18 +71,9 @@ public class GamePanel extends JPanel implements Runnable {
         long lastTime = System.nanoTime();
         long currentTime;
 
-        try {
-            mouseHint = new MouseHint(screenWidth);
-            monke = new Monke();
-            clouds = new Clouds();
-            vines = new Vines();
-            obstacles = new Obstacles();
-            herbs = new Herbs(screenWidth);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        initGameThings();
 
-        while (gameThread != null) {
+        while (gameThread != null && !gameThread.isInterrupted()) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
             timer += (currentTime - lastTime);
@@ -103,51 +95,42 @@ public class GamePanel extends JPanel implements Runnable {
         switch (gameState) {
             case MENU -> {
                 this.setBackground(SkyColor.EASY.getColor());
-                if (keyH.enterPressed) {
+                if (keyH.isEnterPressed()) {
                     if (menuChoice == MenuChoice.QUIT) {
-                        gameThread = null;
+                        gameThread.interrupt();
                     } else {
                         gameState = GameState.PLAY;
-                        keyH.enterPressed = false;
                     }
                 }
 
                 // moving cursor between menu options
                 switch (menuChoice) {
                     case EASY -> {
-                        if (keyH.downPressed) {
+                        if (keyH.isDownPressed()) {
                             menuChoice = MenuChoice.MEDIUM;
-                            keyH.downPressed = false;
-                        } else if (keyH.upPressed) {
+                        } else if (keyH.isUpPressed()) {
                             menuChoice = MenuChoice.QUIT;
-                            keyH.upPressed = false;
                         }
                     }
                     case MEDIUM -> {
-                        if (keyH.downPressed) {
+                        if (keyH.isDownPressed()) {
                             menuChoice = MenuChoice.HARD;
-                            keyH.downPressed = false;
-                        } else if (keyH.upPressed) {
+                        } else if (keyH.isUpPressed()) {
                             menuChoice = MenuChoice.EASY;
-                            keyH.upPressed = false;
                         }
                     }
                     case HARD -> {
-                        if (keyH.downPressed) {
+                        if (keyH.isDownPressed()) {
                             menuChoice = MenuChoice.QUIT;
-                            keyH.downPressed = false;
-                        } else if (keyH.upPressed) {
+                        } else if (keyH.isUpPressed()) {
                             menuChoice = MenuChoice.MEDIUM;
-                            keyH.upPressed = false;
                         }
                     }
                     case QUIT -> {
-                        if (keyH.downPressed) {
+                        if (keyH.isDownPressed()) {
                             menuChoice = MenuChoice.EASY;
-                            keyH.downPressed = false;
-                        } else if (keyH.upPressed) {
+                        } else if (keyH.isUpPressed()) {
                             menuChoice = MenuChoice.HARD;
-                            keyH.upPressed = false;
                         }
                     }
                 }
@@ -173,28 +156,20 @@ public class GamePanel extends JPanel implements Runnable {
             }
             case GAMEOVER -> {
                 this.setBackground(SkyColor.GAMEOVER.getColor());
-                gameState = GameState.MENU;
-                System.out.println("GAMEOVER");
-                // monke fall
-                // draw cigarette
+                monke.updateGameOver(screenHeight);
+                if (keyH.keyPressed) {
+                    gameState = GameState.MENU;
+                    // reinitialize game objects and timer
+                    initGameThings();
+                }
             }
         }
 
         if (monke.isDead(obstacles)) {
             gameState = GameState.GAMEOVER;
-            // generating brand new objects bc screw this
-            try {
-                mouseHint = new MouseHint(screenWidth);
-                monke = new Monke();
-                clouds = new Clouds();
-                vines = new Vines();
-                obstacles = new Obstacles();
-                herbs = new Herbs(screenWidth);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            timer = 0;
+            secondsSurvived = secondsPassed - 4; // -4 bc there's a three seconds delay in update case PLAY
         }
+
     }
 
     @Override
@@ -245,12 +220,28 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
             case GAMEOVER -> {
-                g2.setColor(new Color(0x000000));
-                g2.setColor(Color.CYAN);
-                g2.fillRect(25, 25, screenWidth - 50, screenHeight - 50);
+                monke.drawGameOver(g2);
+                g2.setFont(new Font("arial", Font.BOLD, 42));
+                g2.setColor(Color.RED);
+                g2.drawString(String.format("ПОКУРИЛ... (продержался %d секунд)", secondsSurvived), (screenWidth >> 2), (screenHeight >> 1));
+                g2.drawString("((нажмите любую клавишу))", (screenWidth >> 2), ((screenHeight >> 1) + (screenHeight >> 3)));
             }
         }
 
         g2.dispose();
+    }
+
+    private void initGameThings() {
+        try {
+            mouseHint = new MouseHint(screenWidth);
+            monke = new Monke();
+            clouds = new Clouds();
+            vines = new Vines();
+            obstacles = new Obstacles();
+            herbs = new Herbs(screenWidth);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        timer = 0;
     }
 }

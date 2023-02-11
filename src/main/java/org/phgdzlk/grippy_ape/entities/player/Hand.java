@@ -58,6 +58,13 @@ public class Hand {
         hitBox.setLocation(center.x - halfWidth, center.y - halfHeight);
     }
 
+    public void updateGameOver(Point head) {
+        int x = ((center.x * 7) + head.x) >> 3;
+        int y = ((center.y * 7) + head.y) >> 3;
+        center.setLocation(x, y);
+        hitBox.setLocation(center.x - halfWidth, center.y - halfHeight);
+    }
+
     public void draw(Graphics2D g2, Point head, int headHalfSize) {
         // draw arms // TODO arms made of objects with gravity that will hang like ropes
         int headX = head.x + headHalfSize;

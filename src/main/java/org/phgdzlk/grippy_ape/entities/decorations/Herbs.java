@@ -34,7 +34,11 @@ public class Herbs {
     }
 
     public void draw(Graphics2D g2) {
-        units.forEach(herb -> g2.drawImage(herb.image(), herb.pos().x, herb.pos().y, HerbUnit.width, HerbUnit.height, null));
+        units.forEach(herb -> {
+            // Image img = herb.image();
+            // why the ConcurrentModificationException...
+            g2.drawImage(herb.image(), herb.pos().getLocation().x, herb.pos().getLocation().y, HerbUnit.width, HerbUnit.height, null);
+        });
     }
 
     public void generate(int screenHeight) {

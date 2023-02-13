@@ -31,11 +31,9 @@ public class Vines {
     public void draw(Graphics2D g2, int screenHeight) {
         for (var vine : units) {
             for (int y = 0; y < screenHeight; y += 64) {
-                g2.drawImage(image, vine.x, y, width, height, null);
+                g2.drawImage(image, vine.getLocation().x, y, width, height, null);
             }
         }
-        getVineHitboxes().forEach(vine ->
-                g2.fillRect(vine.x, vine.y, vine.width, 0));
     }
 
     public void generate(int screenHeight) {

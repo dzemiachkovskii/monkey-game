@@ -40,7 +40,7 @@ public class Obstacles {
     }
 
     public void draw(Graphics2D g2) {
-        units.forEach(obstacle -> g2.drawImage(image, obstacle.x, obstacle.y, width, height, null));
+        units.forEach(obstacle -> g2.drawImage(image, obstacle.getLocation().x, obstacle.getLocation().y, width, height, null));
     }
 
     public ArrayList<Polygon> getObstacles() {

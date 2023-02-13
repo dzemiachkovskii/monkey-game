@@ -23,16 +23,16 @@ public class Clouds {
     public void update() {
         generate();
         // moving clouds to the left
-        units.forEach(cloud ->
-                cloud.setLocation(cloud.x - (3 - (cloud.y >> 6)), cloud.y));
+        units.forEach(cloud -> cloud.setLocation(cloud.x - (3 - (cloud.y >> 6)), cloud.y));
         // deleting all clouds after they cross the left border of the screen
         units.removeIf(cloud -> cloud.x < -width);
     }
 
     public void draw(Graphics2D g2) {
-        units.forEach(cloud ->
-                g2.drawImage(image, cloud.x, cloud.y, width, height, null)
-        );
+        units.forEach(cloud -> {
+            // why the ConcurrentModificationException...
+            g2.drawImage(image, cloud.getLocation().x, cloud.getLocation().y, width, height, null);
+        });
     }
 
     public void generate() {

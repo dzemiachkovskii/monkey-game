@@ -4,8 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
-    public boolean keyPressed;
-    private boolean downPressed, upPressed, enterPressed;
+    private boolean downPressed, upPressed, enterPressed, keyPressed;
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -41,6 +40,16 @@ public class KeyHandler implements KeyListener {
 
     public boolean isEnterPressed() {
         boolean temp = enterPressed;
+        enterPressed = false;
+        return temp;
+    }
+
+    public boolean isKeyPressed() {
+        boolean temp = keyPressed;
+        keyPressed = false;
+        // "turning off" all other key variables to to prevent menu from random actions
+        upPressed = false;
+        downPressed = false;
         enterPressed = false;
         return temp;
     }

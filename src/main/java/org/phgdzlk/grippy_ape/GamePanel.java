@@ -158,7 +158,7 @@ public class GamePanel extends JPanel implements Runnable {
             case GAMEOVER -> {
                 this.setBackground(SkyColor.GAMEOVER.getColor());
                 monke.updateGameOver(screenHeight);
-                if (keyH.keyPressed) {
+                if (keyH.isKeyPressed()) {
                     gameState = GameState.MENU;
                 }
             }

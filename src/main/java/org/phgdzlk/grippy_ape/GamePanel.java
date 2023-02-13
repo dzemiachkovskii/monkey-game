@@ -231,16 +231,12 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void initGameThings() {
-        try {
-            mouseHint = new MouseHint(screenWidth);
-            monke = new Monke();
-            clouds = new Clouds();
-            vines = new Vines();
-            obstacles = new Obstacles();
-            herbs = new Herbs(screenWidth);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mouseHint = new MouseHint(screenWidth);
+        monke = new Monke();
+        clouds = new Clouds();
+        vines = new Vines();
+        obstacles = new Obstacles();
+        herbs = new Herbs(screenWidth);
         timer = 0;
     }
 }

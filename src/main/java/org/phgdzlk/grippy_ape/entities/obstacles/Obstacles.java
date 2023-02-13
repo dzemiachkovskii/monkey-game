@@ -12,11 +12,17 @@ import java.util.Random;
 public class Obstacles {
     public static final int width = 72, height = 72;
     private final Random rand = new Random();
-    private final BufferedImage image;
+    private final Image image;
     private final LinkedList<Point> units;
 
-    public Obstacles() throws IOException {
-        image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/cigarette.png")));
+    public Obstacles() {
+        BufferedImage temp = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        try {
+            temp = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/cigarette.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        image = temp;
         units = new LinkedList<>();
     }
 

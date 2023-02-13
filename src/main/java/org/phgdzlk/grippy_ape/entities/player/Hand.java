@@ -15,20 +15,32 @@ public class Hand {
     public static final int width = 36, height = 36;
     public static final int halfWidth = width >> 1;
     public static final int halfHeight = height >> 1;
-    private final BufferedImage openHandImage;
-    private final BufferedImage closeHandImage;
+    private final Image openHandImage;
+    private final Image closeHandImage;
     private final Point center;
     private final Rectangle hitBox;
     private final HandState handState;
     private final boolean isRight;
 
-    public Hand(HandState handState, boolean isRight) throws IOException {
+    public Hand(HandState handState, boolean isRight) {
+        // loading images
+        BufferedImage temp_openHandImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
+                temp_closedHandImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        try {
+            temp_openHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/open_hand.png")));
+            temp_closedHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/closed_hand.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        openHandImage = temp_openHandImage;
+        closeHandImage = temp_closedHandImage;
+
+        // initializing start position
+        this.isRight = isRight;
         int y = isRight ? 400 : 200;
         center = new Point(630, y);
-        openHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/open_hand.png")));
-        closeHandImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/closed_hand.png")));
+
         this.handState = handState;
-        this.isRight = isRight;
         hitBox = new Rectangle(center.x - halfWidth, center.y - halfHeight, width, height);
     }
 

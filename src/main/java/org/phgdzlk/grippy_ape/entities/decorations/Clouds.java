@@ -11,12 +11,18 @@ import java.util.Random;
 public class Clouds {
     public static final int width = 260, height = 145;
     private final Random rand = new Random();
-    private final BufferedImage image;
+    private final Image image;
     private final LinkedList<Point> units;
 
 
-    public Clouds() throws IOException {
-        image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/cloud.png")));
+    public Clouds() {
+        BufferedImage temp = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        try {
+            temp = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/cloud.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        image = temp;
         units = new LinkedList<>();
     }
 

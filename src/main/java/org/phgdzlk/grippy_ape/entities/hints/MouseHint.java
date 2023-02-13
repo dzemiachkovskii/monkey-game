@@ -9,15 +9,23 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class MouseHint {
-    private final BufferedImage left_click;
-    private final BufferedImage right_click;
+    private final Image left_click;
+    private final Image right_click;
     private final int x, width, height;
 
-    public MouseHint(int screenWidth) throws IOException {
-        left_click = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/mouse_hint_left.png")));
-        right_click = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/mouse_hint_right.png")));
-        width = left_click.getWidth() >> 1;
-        height = left_click.getHeight() >> 1;
+    public MouseHint(int screenWidth) {
+        BufferedImage temp_lc = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
+                temp_rc = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        try {
+            temp_lc = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/mouse_hint_left.png")));
+            temp_rc = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/mouse_hint_right.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        left_click = temp_lc;
+        right_click = temp_rc;
+        width = left_click.getWidth(null) >> 1;
+        height = left_click.getHeight(null) >> 1;
         x = screenWidth - width - 10;
     }
 
@@ -27,4 +35,4 @@ public class MouseHint {
         g2.drawImage(mouseH.leftButton ? left_click : right_click, x, 10, width, height, null);
     }
 }
-// probably I should move this class to somewhere else...
+// probably I should move this class to some other package...

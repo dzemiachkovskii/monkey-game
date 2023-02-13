@@ -15,15 +15,23 @@ public class Monke {
     public static final int width = 60, height = 60;
     public static final int halfWidth = width >> 1;
     public static final int halfHeight = height >> 1;
-    private final BufferedImage image;
-    private final BufferedImage cigarette;
+    private final Image image;
+    private final Image cigarette;
     private final Point center;
     private final Rectangle hitBox;
     private final ArrayList<Hand> hands;
 
-    public Monke() throws IOException {
-        image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/head.png")));
-        cigarette = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/lighted_cigarette.png")));
+    public Monke() {
+        BufferedImage temp = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
+                temp_cigarette = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        try {
+            temp = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/head.png")));
+            temp_cigarette = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/lighted_cigarette.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        image = temp;
+        cigarette = temp_cigarette;
         var handState = new HandState();
         hands = new ArrayList<>(2);
         hands.add(new Hand(handState, true));

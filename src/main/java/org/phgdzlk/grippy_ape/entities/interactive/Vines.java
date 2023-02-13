@@ -12,11 +12,17 @@ import java.util.Random;
 public class Vines {
     private static final int width = 64, height = 64;
     private final Random rand = new Random();
-    private final BufferedImage image;
+    private final Image image;
     private final LinkedList<Point> units;
 
-    public Vines() throws IOException {
-        image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/vine.png")));
+    public Vines() {
+        BufferedImage temp = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        try {
+            temp = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/vine.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        image = temp;
         units = new LinkedList<>();
     }
 

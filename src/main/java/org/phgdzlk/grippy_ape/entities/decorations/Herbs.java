@@ -10,17 +10,26 @@ import java.util.Random;
 
 public class Herbs {
     private final Random rand = new Random();
-    private final BufferedImage[] images;
+    private final Image[] images;
     private final LinkedList<HerbUnit> units;
     private final int amountOfHerbs;
     private int count = 0;
 
-    public Herbs(int screenWidth) throws IOException {
-        images = new BufferedImage[4];
-        images[0] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/jungle_plant_1.png")));
-        images[1] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/palm_tree_1.png")));
-        images[2] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/jungle_plant_2.png")));
-        images[3] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/palm_tree_2.png")));
+    public Herbs(int screenWidth) {
+        images = new Image[4];
+        BufferedImage[] temps = new BufferedImage[4];
+        for (int i = 0; i < 4; i++) {
+            temps[i] = new BufferedImage(HerbUnit.width, HerbUnit.height, BufferedImage.TYPE_INT_ARGB);
+        }
+        try {
+            temps[0] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/jungle_plant_1.png")));
+            temps[1] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/palm_tree_1.png")));
+            temps[2] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/jungle_plant_2.png")));
+            temps[3] = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/palm_tree_2.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.arraycopy(temps, 0, images, 0, 4);
         units = new LinkedList<>();
         amountOfHerbs = (screenWidth / HerbUnit.width + 3) << 2;
     }

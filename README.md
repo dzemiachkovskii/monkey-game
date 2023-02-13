@@ -12,4 +12,4 @@
 ## Запуск игры
 
 1. Скачайте файл [grippy_ape.jar](out/artifacts/grippy_ape_jar/)
-2. Запустите файл [при помощи Java](https://ru.wikihow.com/%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D1%82%D0%B8%D1%82%D1%8C-.JAR-%D1%84%D0%B0%D0%B9%D0%BB)
+2. Запустите файл <a href="https://ru.wikihow.com/%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D1%82%D0%B8%D1%82%D1%8C-.JAR-%D1%84%D0%B0%D0%B9%D0%BB" target="_blank">с помощью Java</a>

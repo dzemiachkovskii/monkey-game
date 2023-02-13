@@ -27,7 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static GameState gameState = GameState.MENU;
     public static MenuChoice menuChoice = MenuChoice.EASY;
     public static int gameSpeed;
-    public static long timer;
+    public static long timer = 0;
     public static long secondsPassed;
     public static long secondsSurvived;
     Thread gameThread;
@@ -100,6 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
                         gameThread.interrupt();
                     } else {
                         gameState = GameState.PLAY;
+                        initGameThings();
                     }
                 }
 
@@ -159,8 +160,6 @@ public class GamePanel extends JPanel implements Runnable {
                 monke.updateGameOver(screenHeight);
                 if (keyH.keyPressed) {
                     gameState = GameState.MENU;
-                    // reinitialize game objects and timer
-                    initGameThings();
                 }
             }
         }

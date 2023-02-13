@@ -31,6 +31,7 @@ public class Vines {
     public void draw(Graphics2D g2, int screenHeight) {
         for (var vine : units) {
             for (int y = 0; y < screenHeight; y += 64) {
+                // why the ConcurrentModificationException...
                 g2.drawImage(image, vine.getLocation().x, y, width, height, null);
             }
         }

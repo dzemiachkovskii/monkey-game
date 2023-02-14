@@ -208,13 +208,11 @@ public class GamePanel extends JPanel implements Runnable {
                 herbs.draw(g2);
                 mouseHint.draw(g2, mouseH);
 
+                g2.setFont(new Font("arial", Font.BOLD, 42));
+                g2.setColor(Color.RED);
                 if (secondsPassed <= 3) {
-                    g2.setFont(new Font("arial", Font.BOLD, 42));
-                    g2.setColor(Color.RED);
                     g2.drawString(String.format("БРОСАЮ КУРИТЬ ЧЕРЕЗ %d...", 4 - secondsPassed), timerX, timerY);
                 } else {
-                    g2.setFont(new Font("arial", Font.BOLD, 42));
-                    g2.setColor(Color.RED);
                     g2.drawString(String.format("НЕ КУРИЛ %d СЕКУНД", secondsPassed - 4), timerX, timerY);
                 }
             }

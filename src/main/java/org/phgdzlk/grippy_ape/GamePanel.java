@@ -150,7 +150,7 @@ public class GamePanel extends JPanel implements Runnable {
                 } else {
                     vines.update(gameSpeed, screenHeight);
                     obstacles.update(gameSpeed, screenHeight);
-                    monke.update(gameSpeed, mouseH, vines);
+                    monke.update(gameSpeed, keyH, mouseH, vines);
                     clouds.update();
                     herbs.update(gameSpeed, screenHeight);
                 }

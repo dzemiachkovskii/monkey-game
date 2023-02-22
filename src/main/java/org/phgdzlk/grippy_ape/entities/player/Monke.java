@@ -2,6 +2,7 @@ package org.phgdzlk.grippy_ape.entities.player;
 
 import org.phgdzlk.grippy_ape.entities.interactive.Vines;
 import org.phgdzlk.grippy_ape.entities.obstacles.Obstacles;
+import org.phgdzlk.grippy_ape.input_handlers.KeyHandler;
 import org.phgdzlk.grippy_ape.input_handlers.MouseHandler;
 
 import javax.imageio.ImageIO;
@@ -15,7 +16,7 @@ public class Monke {
     public static final int width = 60, height = 60;
     public static final int halfWidth = width >> 1;
     public static final int halfHeight = height >> 1;
-    private final Image image;
+    private Image image;
     private final Image cigarette;
     private final Point center;
     private final Rectangle hitBox;
@@ -40,7 +41,7 @@ public class Monke {
         hitBox = new Rectangle(center.x - halfWidth, center.y - halfHeight, width, height);
     }
 
-    public void update(int gameSpeed, MouseHandler mouseH, Vines vines) {
+    public void update(int gameSpeed, KeyHandler keyH, MouseHandler mouseH, Vines vines) {
         Point handAverage = new Point();
         for (Hand hand : hands) {
             hand.update(gameSpeed, mouseH, vines);
@@ -59,6 +60,10 @@ public class Monke {
         yAverage = (yAverage + center.y) >> 1;
         center.setLocation(xAverage, yAverage);
         hitBox.setLocation(center.x - halfWidth, center.y - halfHeight);
+
+        if (keyH.isCringePressed()) {
+            setAltHead();
+        }
     }
 
     public void updateGameOver(int screenHeight) {
@@ -92,4 +97,13 @@ public class Monke {
     private boolean isTouchedCigarette(Obstacles o) {
         return o.getObstacles().stream().anyMatch(obstacle -> obstacle.intersects(hitBox)) || hands.stream().anyMatch(hand -> hand.intersetcsWith(o));
     }
+
+    private void setAltHead() {
+        try {
+            image = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/alt_head.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+

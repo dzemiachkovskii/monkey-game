@@ -1,6 +1,6 @@
 # Руководство по установке игры
 
-1. Скачайте файл [grippy_ape.jar](https://github.com/dzemiachkovskii/grippy-ape/releases/tag/v1)
+1. Скачайте файл [grippy_ape.jar](https://github.com/dzemiachkovskii/grippy-ape/releases) из последнего релиза
 
 ![how to download jar](images/how_to_download_jar.jpg)
 
